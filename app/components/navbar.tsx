@@ -3,11 +3,13 @@
 import { signIn, signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 
 const NavBar = () => {
   const { data: session } = useSession();
   const [showDropDown, setShowDropDown] = useState(false);
+  const pathName = usePathname()
 
   function SignOut() {
     signOut({ redirect: true, callbackUrl: "/" });
@@ -16,6 +18,11 @@ const NavBar = () => {
   function SignIn() {
     signIn("google", { redirect: true, callbackUrl: "/posts" });
   }
+
+  const homeStyle = pathName.endsWith("posts") ? "text-white bg-gray-900" : "text-gray-300 hover:bg-gray-700 hover:text-white";
+  const profileStyle = pathName.endsWith("profile")
+    ? "text-white bg-gray-900"
+    : "text-gray-300 hover:bg-gray-700 hover:text-white";
 
   return (
     <nav className="bg-gray-800">
@@ -80,14 +87,13 @@ const NavBar = () => {
                 <div className="flex space-x-4">
                   <Link
                     href="/posts"
-                    className="rounded-md bg-gray-900 px-3 py-2 text-sm font-medium text-white"
-                    aria-current="page"
+                    className={`block rounded-md px-3 py-2 text-base font-medium ${homeStyle}`}
                   >
                     Home
                   </Link>
                   <Link
                     href="/profile"
-                    className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+                    className={`block rounded-md px-3 py-2 text-base font-medium  ${profileStyle}`}
                   >
                     Profile
                   </Link>
@@ -124,14 +130,14 @@ const NavBar = () => {
               <>
                 <Link
                   href="/posts"
-                  className="block rounded-md bg-gray-900 px-3 py-2 text-base font-medium text-white"
+                  className={`block rounded-md px-3 py-2 text-base font-medium ${homeStyle}`}
                   aria-current="page"
                 >
                   Home
                 </Link>
                 <Link
                   href="/profile"
-                  className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+                  className={`block rounded-md px-3 py-2 text-base font-medium  ${profileStyle}`}
                 >
                   Profile
                 </Link>
