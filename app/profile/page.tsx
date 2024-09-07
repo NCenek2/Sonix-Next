@@ -45,7 +45,7 @@ const ProfilePage = () => {
     });
 
     if (
-      scrollTop + clientHeight >= scrollHeight - 10 &&
+      scrollTop + clientHeight >= scrollHeight - 16 &&
       hasMore &&
       !currentlyLoading
     ) {
