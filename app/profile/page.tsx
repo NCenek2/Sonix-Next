@@ -15,7 +15,6 @@ const ProfilePage = () => {
   const [page, setPage] = useState(1); // For pagination
 
   const { data: session, status } = useSession();
-  console.log("session ", session);
 
   const fetchPosts = async (pageNumber: number) => {
     try {
