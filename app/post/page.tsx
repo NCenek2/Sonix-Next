@@ -2,6 +2,12 @@ import Image from "next/image";
 import { getSession } from "../options";
 import { redirect } from "next/navigation";
 import { postAction } from "../action";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Create Post",
+  description: "Create Post Page",
+};
 
 const PostPage = async () => {
   const session = await getSession();
