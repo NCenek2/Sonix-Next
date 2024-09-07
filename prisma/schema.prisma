@@ -1,0 +1,86 @@
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+ 
+generator client {
+  provider = "prisma-client-js"
+}
+ 
+model User {
+  id            String          @id @default(auto()) @map("_id") @db.ObjectId
+  name          String?
+  email         String?         @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]      
+  sessions      Session[]
+  posts         Post[]          @relation("UserPosts")
+  likes         PostLike[]      @relation("UserLikes")
+  dislikes      PostDislike[]   @relation("UserDislikes")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+ 
+model Account {
+  id                String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String  @db.ObjectId
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.String
+  access_token      String? @db.String
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.String
+  session_state     String?
+ 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+ 
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+ 
+  @@unique([provider, providerAccountId])
+}
+ 
+model Session {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  sessionToken String   @unique
+  userId       String   @db.ObjectId
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+ 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Post {
+  id           String         @id @default(auto()) @map("_id") @db.ObjectId 
+  userId       String         @db.ObjectId   
+  user         User           @relation("UserPosts", fields: [userId], references: [id], onDelete: Cascade)
+  date         DateTime       @updatedAt
+  message      String   
+  likes        PostLike[]     @relation("PostLikes")  
+  dislikes     PostDislike[]  @relation("PostDislikes")
+}
+
+model PostLike {
+  id       String   @id @default(auto()) @map("_id") @db.ObjectId
+  postId   String   @db.ObjectId
+  userId   String   @db.ObjectId
+  post     Post     @relation("PostLikes", fields: [postId], references: [id], onDelete: Cascade)
+  user     User     @relation("UserLikes", fields: [userId], references: [id], onDelete: Cascade)
+  @@unique([postId, userId]) // Ensures a user can only like a post once
+}
+
+model PostDislike {
+  id       String   @id @default(auto()) @map("_id") @db.ObjectId
+  postId   String   @db.ObjectId
+  userId   String   @db.ObjectId
+  post     Post     @relation("PostDislikes", fields: [postId], references: [id], onDelete: Cascade)
+  user     User     @relation("UserDislikes", fields: [userId], references: [id], onDelete: Cascade)
+  @@unique([postId, userId]) // Ensures a user can only dislike a post once
+}
+ 
