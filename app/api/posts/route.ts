@@ -6,7 +6,8 @@ import { NextResponse } from "next/server";
 export type PostWithRelations = {
   id: string;
   userId: string;
-  date: Date;
+  createdAt: Date;
+  updatedAt: Date;
   message: string;
   user: {
     image: string | null;
@@ -66,13 +67,14 @@ export async function GET(request: Request) {
         },
       },
       orderBy: {
-        date: "desc",
+        createdAt: "desc",
       },
       where,
     });
 
     return NextResponse.json(posts);
   } catch (error) {
+    console.log(error);
     return NextResponse.json(
       { error: "Failed to fetch posts" },
       { status: 500 }

@@ -60,7 +60,8 @@ model Post {
   id           String         @id @default(auto()) @map("_id") @db.ObjectId 
   userId       String         @db.ObjectId   
   user         User           @relation("UserPosts", fields: [userId], references: [id], onDelete: Cascade)
-  date         DateTime       @updatedAt
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
   message      String   
   likes        PostLike[]     @relation("PostLikes")  
   dislikes     PostDislike[]  @relation("PostDislikes")
