@@ -65,6 +65,11 @@ model Post {
   message      String   
   likes        PostLike[]     @relation("PostLikes")  
   dislikes     PostDislike[]  @relation("PostDislikes")
+
+  replyCount   Int            @default(0)
+  parentId     String?        @db.ObjectId
+  parent       Post?          @relation("PostChildren", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction )
+  children     Post[]         @relation("PostChildren")
 }
 
 model PostLike {

@@ -9,6 +9,8 @@ export type PostWithRelations = {
   createdAt: Date;
   updatedAt: Date;
   message: string;
+  replyCount: number;
+  parentId: string | null;
   user: {
     image: string | null;
   };
@@ -22,6 +24,19 @@ export type PostWithRelations = {
     postId: string;
     userId: string;
   }[];
+};
+
+type NotNull = {
+  equals: string;
+};
+
+type IsNull = {
+  isSet: false;
+};
+
+type whereType = {
+  parentId: NotNull | IsNull;
+  userId?: string;
 };
 
 export async function GET(request: Request) {
@@ -41,12 +56,27 @@ export async function GET(request: Request) {
   const page = url.searchParams.get("page") ?? "1";
   const limit = url.searchParams.get("limit") ?? "10";
   const self = url.searchParams.get("self") !== null;
+  const parentId = url.searchParams.get("parentId");
 
-  let where = {};
+  let where: whereType = {
+    parentId: {
+      isSet: false,
+    },
+  };
 
   if (self) {
     where = {
+      ...where,
       userId: id,
+    };
+  }
+
+  if (parentId) {
+    where = {
+      ...where,
+      parentId: {
+        equals: parentId,
+      },
     };
   }
 
