@@ -55,6 +55,7 @@ type ReplyPost = {
   parentId?: string;
 };
 
+// This post is only for replies
 export async function POST(request: Request) {
   const data: ReplyPost = await request.json();
   const { message, userId, parentId } = data;
@@ -70,6 +71,8 @@ export async function POST(request: Request) {
     },
   });
 
+
+  // Only create replies for parents that dont have a parent
   if (!parentPost || parentPost.parentId !== null) {
     return NextResponse.json({
       status: 400,

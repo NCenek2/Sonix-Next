@@ -26,7 +26,7 @@ export async function postAction(formData: FormData) {
     data,
   });
 
-  return redirect("/profile");
+  return redirect("/posts");
 }
 
 export async function editAction(postId: string, formData: FormData) {
@@ -58,5 +58,5 @@ export async function editAction(postId: string, formData: FormData) {
     },
   });
 
-  return redirect("/profile");
+  return redirect("/posts");
 }
