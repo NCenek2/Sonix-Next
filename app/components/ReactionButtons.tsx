@@ -15,7 +15,7 @@ type LikeButtonProps = {
   initialLike?: PostLike;
   initialDislike?: PostDislike;
   setPosts: Dispatch<SetStateAction<PostWithRelations[]>>;
-  setShowReplyTextArea: Dispatch<SetStateAction<boolean>>;
+  setShowReplyTextArea?: Dispatch<SetStateAction<boolean>>;
 };
 
 type ReactType = "like" | "dislike";
@@ -76,6 +76,7 @@ const ReactionButtons = ({
 
     const data = {
       postId,
+      parentId,
     };
 
     let pastPosts: PostWithRelations[] = [];
@@ -133,7 +134,9 @@ const ReactionButtons = ({
           strokeWidth={1.5}
           stroke="currentColor"
           className="size-6"
-          onClick={() => setShowReplyTextArea(true)}
+          onClick={() =>
+            setShowReplyTextArea ? setShowReplyTextArea(true) : null
+          }
         >
           <path
             strokeLinecap="round"

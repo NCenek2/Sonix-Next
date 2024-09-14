@@ -3,14 +3,43 @@ import { NextResponse } from "next/server";
 
 type DeletePost = {
   postId: string;
+  parentId?: string;
 };
 
 export async function DELETE(request: Request) {
   const data = await request.json();
-  const { postId }: DeletePost = data;
+  const { postId, parentId }: DeletePost = data;
 
-  await new Promise((resolve) => setTimeout(resolve, 1500));
+  // Deleting Children If Any
+  await prisma.post.deleteMany({
+    where: {
+      parentId: {
+        equals: postId,
+      },
+    },
+  });
 
+  // Updating Parent Count
+  if (parentId) {
+    const parentPost = await prisma.post.findFirst({
+      where: {
+        id: parentId,
+      },
+    });
+
+    if (parentPost) {
+      await prisma.post.update({
+        where: {
+          id: parentId,
+        },
+        data: {
+          replyCount: parentPost.replyCount - 1,
+        },
+      });
+    }
+  }
+
+  // Delting Post
   await prisma.post.delete({
     where: { id: postId },
   });
@@ -61,6 +90,15 @@ export async function POST(request: Request) {
       message,
       userId,
       parentId,
+    },
+    include: {
+      likes: true,
+      dislikes: true,
+      user: {
+        select: {
+          image: true,
+        },
+      },
     },
   });
 
