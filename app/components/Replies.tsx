@@ -1,9 +1,7 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { PostWithRelations } from "../api/posts/route";
 import axios from "axios";
-import ReactionButtons from "./ReactionButtons";
 import Image from "next/image";
-import { useSession } from "next-auth/react";
 
 type Replies = {
   postId: string;
@@ -13,11 +11,6 @@ type Replies = {
 
 const Replies = ({ postId, replies, setReplies }: Replies) => {
   const [isLoading, setIsLoading] = useState(true);
-
-  const { data: session } = useSession();
-  const {
-    user: { image },
-  } = session!;
 
   const fetchPosts = async () => {
     try {
@@ -51,7 +44,7 @@ const Replies = ({ postId, replies, setReplies }: Replies) => {
               className="h-8 w-8 rounded-full mr-4"
               width={30}
               height={30}
-              src={image ?? "/favicon.ico"}
+              src={reply.user.image ?? "/favicon.ico"}
               alt="profile-image"
             />
             <p>{reply.message}</p>
