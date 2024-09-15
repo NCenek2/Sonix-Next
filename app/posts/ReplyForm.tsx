@@ -7,7 +7,6 @@ type ReplyFormProps = {
   sessionUserId: string;
   setReplies: Dispatch<SetStateAction<PostWithRelations[]>>;
   setShowReplyTextArea: Dispatch<SetStateAction<boolean>>;
-  setHasCommented: Dispatch<SetStateAction<boolean>>;
 };
 
 const ReplyForm = ({
@@ -15,7 +14,6 @@ const ReplyForm = ({
   sessionUserId,
   setReplies,
   setShowReplyTextArea,
-  setHasCommented,
 }: ReplyFormProps) => {
   const [reply, setReply] = useState("");
 
@@ -32,7 +30,6 @@ const ReplyForm = ({
         method: "POST",
       });
       setReplies((prevReplies) => [returnedPost.data.post, ...prevReplies]);
-      setHasCommented(true);
       setReply("");
       setShowReplyTextArea(false);
     } catch (error: unknown) {

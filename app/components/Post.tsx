@@ -32,7 +32,6 @@ const Post = ({
   const [replies, setReplies] = useState<PostWithRelations[]>([]);
   const [showReplyTextArea, setShowReplyTextArea] = useState(false);
   const [showingReplies, setShowingReplies] = useState(false);
-  const [hasCommented, setHasCommented] = useState(false);
 
   const liked: PostLike | undefined = likes.find(
     (p) => p.userId === sessionUserId
@@ -62,7 +61,7 @@ const Post = ({
           setPosts={setPosts}
           setShowReplyTextArea={setShowReplyTextArea}
         />
-        {(replyCount > 0 || hasCommented) && (
+        {(replyCount > 0 || replies.length > 0) && (
           <ReplyButton
             showingReplies={showingReplies}
             onClick={() => setShowingReplies((p) => !p)}
@@ -74,7 +73,6 @@ const Post = ({
             sessionUserId={sessionUserId}
             setReplies={setReplies}
             setShowReplyTextArea={setShowReplyTextArea}
-            setHasCommented={setHasCommented}
           />
         )}
       </div>
