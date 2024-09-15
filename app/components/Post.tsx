@@ -41,41 +41,43 @@ const Post = ({
     (p) => p.userId === sessionUserId
   );
   return (
-    <div className="flex flex-col p-3 rounded-md bg-slate-100 text-black">
-      <div className="flex mb-2">
-        <Image
-          className="h-8 w-8 rounded-full mr-4"
-          width={30}
-          height={30}
-          src={image ?? "/favicon.ico"}
-          alt="profile-image"
-        />
-        <p>{message}</p>
-      </div>
-      <ReactionButtons
-        postId={postId}
-        posterId={posterId}
-        parentId={parentId}
-        initialLike={liked}
-        initialDislike={disliked}
-        setPosts={setPosts}
-        setShowReplyTextArea={setShowReplyTextArea}
-      />
-      {(replyCount > 0 || hasCommented) && (
-        <ReplyButton
-          showingReplies={showingReplies}
-          onClick={() => setShowingReplies((p) => !p)}
-        />
-      )}
-      {showReplyTextArea && (
-        <ReplyForm
+    <div className="flex flex-col gap-1">
+      <div className="flex flex-col p-3 rounded-md bg-slate-100 text-black">
+        <div className="flex mb-2">
+          <Image
+            className="h-8 w-8 rounded-full mr-4"
+            width={30}
+            height={30}
+            src={image ?? "/favicon.ico"}
+            alt="profile-image"
+          />
+          <p>{message}</p>
+        </div>
+        <ReactionButtons
           postId={postId}
-          sessionUserId={sessionUserId}
-          setReplies={setReplies}
+          posterId={posterId}
+          parentId={parentId}
+          initialLike={liked}
+          initialDislike={disliked}
+          setPosts={setPosts}
           setShowReplyTextArea={setShowReplyTextArea}
-          setHasCommented={setHasCommented}
         />
-      )}
+        {(replyCount > 0 || hasCommented) && (
+          <ReplyButton
+            showingReplies={showingReplies}
+            onClick={() => setShowingReplies((p) => !p)}
+          />
+        )}
+        {showReplyTextArea && (
+          <ReplyForm
+            postId={postId}
+            sessionUserId={sessionUserId}
+            setReplies={setReplies}
+            setShowReplyTextArea={setShowReplyTextArea}
+            setHasCommented={setHasCommented}
+          />
+        )}
+      </div>
       {showingReplies && (
         <Replies postId={postId} replies={replies} setReplies={setReplies} />
       )}

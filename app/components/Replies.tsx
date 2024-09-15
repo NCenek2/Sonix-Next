@@ -36,11 +36,11 @@ const Replies = ({ postId, replies, setReplies }: Replies) => {
   }, []);
 
   if (isLoading) {
-    return <h1>Loading...</h1>;
+    return <h1 className="text-white text-center">Loading...</h1>;
   }
 
   return (
-    <div>
+    <div className="flex flex-col gap-1">
       {replies.map((reply) => {
         const {
           user: { image },
@@ -62,7 +62,7 @@ const Replies = ({ postId, replies, setReplies }: Replies) => {
         return (
           <div
             key={id}
-            className="flex flex-col pl-4 p-1 rounded-md bg-slate-100 text-black"
+            className="flex flex-col w-11/12 ml-auto p-2 rounded-md bg-slate-100 text-black"
           >
             <div className="flex items-center mb-2">
               <Image
