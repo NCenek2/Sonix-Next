@@ -6,7 +6,7 @@ type ReplyButtonProps = {
 const ReplyButton = ({ showingReplies, ...props }: ReplyButtonProps) => {
   return (
     <button {...props}>
-      <div className="flex justify-center text-gray-700">
+      <div className="flex justify-center text-gray-700 hover:text-gray-500">
         {showingReplies ? (
           <svg
             xmlns="http://www.w3.org/2000/svg"

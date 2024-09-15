@@ -102,7 +102,9 @@ const ReactionButtons = ({
         viewBox="0 0 24 24"
         strokeWidth={1.5}
         stroke="currentColor"
-        className={`size-6 ${liked && "text-blue-500"}`}
+        className={`size-6 ${
+          liked && "text-blue-500"
+        } hover:text-blue-500 cursor-pointer`}
         onClick={() => handleReaction("like")}
       >
         <path
@@ -117,7 +119,9 @@ const ReactionButtons = ({
         viewBox="0 0 24 24"
         strokeWidth={1.5}
         stroke="currentColor"
-        className={`size-6 ${disliked && "text-red-500"}`}
+        className={`size-6 ${
+          disliked && "text-red-500"
+        } hover:text-red-500 cursor-pointer`}
         onClick={() => handleReaction("dislike")}
       >
         <path
@@ -133,7 +137,7 @@ const ReactionButtons = ({
           viewBox="0 0 24 24"
           strokeWidth={1.5}
           stroke="currentColor"
-          className="size-6"
+          className="size-6 hover:text-slate-600 cursor-pointer"
           onClick={() =>
             setShowReplyTextArea ? setShowReplyTextArea(true) : null
           }
@@ -154,7 +158,7 @@ const ReactionButtons = ({
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="size-6"
+              className="size-6 hover:text-slate-600 cursor-pointer"
             >
               <path
                 strokeLinecap="round"
@@ -169,7 +173,7 @@ const ReactionButtons = ({
             viewBox="0 0 24 24"
             strokeWidth={1.5}
             stroke="currentColor"
-            className="size-6"
+            className="size-6 hover:text-red-500 cursor-pointer"
             onClick={handleDelete}
           >
             <path
