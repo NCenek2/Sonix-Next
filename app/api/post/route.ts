@@ -49,15 +49,16 @@ export async function DELETE(request: Request) {
   });
 }
 
-type ReplyPost = {
+// Used for Both POST And Patch
+type PostData = {
   message: string;
   userId: string;
   parentId?: string;
+  postId?: string;
 };
 
-// This post is only for replies
 export async function POST(request: Request) {
-  const data: ReplyPost = await request.json();
+  const data: PostData = await request.json();
   const { message, userId, parentId } = data;
 
   if (!message || !userId || !parentId)
@@ -70,7 +71,6 @@ export async function POST(request: Request) {
       id: parentId,
     },
   });
-
 
   // Only create replies for parents that dont have a parent
   if (!parentPost || parentPost.parentId !== null) {
@@ -93,6 +93,39 @@ export async function POST(request: Request) {
       message,
       userId,
       parentId,
+    },
+    include: {
+      likes: true,
+      dislikes: true,
+      user: {
+        select: {
+          image: true,
+        },
+      },
+    },
+  });
+
+  return NextResponse.json({
+    status: 201,
+    post,
+  });
+}
+
+export async function PATCH(request: Request) {
+  const data: PostData = await request.json();
+  const { message, userId, postId } = data;
+
+  if (!message || !userId || !postId)
+    return NextResponse.json({
+      status: 400,
+    });
+
+  const post = await prisma.post.update({
+    where: {
+      id: postId,
+    },
+    data: {
+      message,
     },
     include: {
       likes: true,

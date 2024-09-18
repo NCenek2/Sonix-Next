@@ -13,6 +13,8 @@ type PostProps = PostWithRelations & {
   setPosts: Dispatch<SetStateAction<PostWithRelations[]>>;
 };
 
+export type PostData = { message: string; visible: boolean; postId?: string };
+
 const Post = ({
   id: postId,
   userId: posterId,
@@ -30,7 +32,10 @@ const Post = ({
   } = session!;
 
   const [replies, setReplies] = useState<PostWithRelations[]>([]);
-  const [showReplyTextArea, setShowReplyTextArea] = useState(false);
+  const [textArea, setTextArea] = useState<PostData>({
+    message: "",
+    visible: false,
+  });
   const [showingReplies, setShowingReplies] = useState(false);
 
   const liked: PostLike | undefined = likes.find(
@@ -39,9 +44,22 @@ const Post = ({
   const disliked: PostDislike | undefined = dislikes.find(
     (p) => p.userId === sessionUserId
   );
+
+  function showReply(type: "comment" | "edit") {
+    setTextArea({
+      message: type === "edit" ? message : "",
+      visible: true,
+      postId: type === "edit" ? postId : undefined,
+    });
+  }
+
   return (
     <div className="flex flex-col gap-1">
-      <div className="flex flex-col p-3 rounded-md bg-slate-100 text-black">
+      <div
+        className={`flex flex-col p-3 rounded-md bg-slate-100 text-black ${
+          parentId !== null && "w-11/12 ml-auto"
+        } `}
+      >
         <div className="flex mb-2">
           <Image
             className="h-8 w-8 rounded-full mr-4"
@@ -59,24 +77,26 @@ const Post = ({
           initialLike={liked}
           initialDislike={disliked}
           setPosts={setPosts}
-          setShowReplyTextArea={setShowReplyTextArea}
+          showReply={showReply}
         />
-        {(replyCount > 0 || replies.length > 0) && (
+        {(replyCount > 0 || replies.length > 0) && parentId === null && (
           <ReplyButton
             showingReplies={showingReplies}
             onClick={() => setShowingReplies((p) => !p)}
           />
         )}
-        {showReplyTextArea && (
+        {textArea.visible && (
           <ReplyForm
             postId={postId}
             sessionUserId={sessionUserId}
             setReplies={setReplies}
-            setShowReplyTextArea={setShowReplyTextArea}
+            textArea={textArea}
+            setPosts={setPosts}
+            setTextArea={setTextArea}
           />
         )}
       </div>
-      {showingReplies && (
+      {showingReplies && parentId === null && (
         <Replies postId={postId} replies={replies} setReplies={setReplies} />
       )}
     </div>

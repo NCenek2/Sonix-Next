@@ -6,7 +6,6 @@ import { useSession } from "next-auth/react";
 import { Dispatch, SetStateAction, useState } from "react";
 import { PostWithRelations } from "../api/posts/route";
 import { ReactResponse } from "../api/post/react/route";
-import Link from "next/link";
 
 type LikeButtonProps = {
   postId: string;
@@ -15,7 +14,7 @@ type LikeButtonProps = {
   initialLike?: PostLike;
   initialDislike?: PostDislike;
   setPosts: Dispatch<SetStateAction<PostWithRelations[]>>;
-  setShowReplyTextArea?: Dispatch<SetStateAction<boolean>>;
+  showReply?: (type: "comment" | "edit") => void;
 };
 
 type ReactType = "like" | "dislike";
@@ -35,7 +34,7 @@ const ReactionButtons = ({
   initialLike,
   initialDislike,
   setPosts,
-  setShowReplyTextArea,
+  showReply,
 }: LikeButtonProps) => {
   const { data: session } = useSession();
 
@@ -138,9 +137,7 @@ const ReactionButtons = ({
           strokeWidth={1.5}
           stroke="currentColor"
           className="size-6 hover:text-slate-600 cursor-pointer"
-          onClick={() =>
-            setShowReplyTextArea ? setShowReplyTextArea(true) : null
-          }
+          onClick={() => (showReply ? showReply("comment") : null)}
         >
           <path
             strokeLinecap="round"
@@ -151,22 +148,21 @@ const ReactionButtons = ({
       )}
       {session?.user.id === posterId && (
         <>
-          <Link href={`/post/${postId}`}>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="size-6 hover:text-slate-600 cursor-pointer"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"
-              />
-            </svg>
-          </Link>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            className="size-6 hover:text-slate-600 cursor-pointer"
+            onClick={() => (showReply ? showReply("edit") : null)}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"
+            />
+          </svg>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"

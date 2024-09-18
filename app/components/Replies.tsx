@@ -1,10 +1,8 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { PostWithRelations } from "../api/posts/route";
 import axios from "axios";
-import Image from "next/image";
-import ReactionButtons from "./ReactionButtons";
 import { useSession } from "next-auth/react";
-import { PostDislike, PostLike } from "@prisma/client";
+import Post from "./Post";
 
 type Replies = {
   postId: string;
@@ -15,9 +13,6 @@ type Replies = {
 const Replies = ({ postId, replies, setReplies }: Replies) => {
   const [isLoading, setIsLoading] = useState(true);
   const { data: session } = useSession();
-  const {
-    user: { id: sessionUserId },
-  } = session!;
 
   const fetchPosts = async () => {
     try {
@@ -41,50 +36,14 @@ const Replies = ({ postId, replies, setReplies }: Replies) => {
 
   return (
     <div className="flex flex-col gap-1">
-      {replies.map((reply) => {
-        const {
-          user: { image },
-          id,
-          message,
-          parentId,
-          userId,
-          likes,
-          dislikes,
-        } = reply;
-
-        const liked: PostLike | undefined = likes.find(
-          (p) => p.userId === sessionUserId
-        );
-        const disliked: PostDislike | undefined = dislikes.find(
-          (p) => p.userId === sessionUserId
-        );
-
-        return (
-          <div
-            key={id}
-            className="flex flex-col w-11/12 ml-auto p-2 rounded-md bg-slate-100 text-black"
-          >
-            <div className="flex items-center mb-2">
-              <Image
-                className="h-8 w-8 rounded-full mr-4"
-                width={30}
-                height={30}
-                src={image ?? "/favicon.ico"}
-                alt="profile-image"
-              />
-              <p>{message}</p>
-            </div>
-            <ReactionButtons
-              postId={id}
-              posterId={userId}
-              parentId={parentId}
-              initialLike={liked}
-              initialDislike={disliked}
-              setPosts={setReplies}
-            />
-          </div>
-        );
-      })}
+      {replies.map((reply) => (
+        <Post
+          key={reply.id}
+          {...reply}
+          session={session!}
+          setPosts={setReplies}
+        />
+      ))}
     </div>
   );
 };
